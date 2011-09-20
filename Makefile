@@ -1,6 +1,5 @@
-obj-m += xxabuse.o
-#obj-m +=file_write.o
-xxabuse-objs += file_write.o kernel-abuse.o
+obj-m += kabuse.o
+kabuse-objs += file_write.o kernel-abuse.o
 
 all:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules

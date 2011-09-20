@@ -19,11 +19,10 @@ int file_write(char *filename)
 	char *kbuf = "Hello World from the ground!\n";
 	loff_t pos;
 
-	out = filp_open(filename, O_WRONLY|O_CREAT, 0644);
+	out = filp_open(filename, O_WRONLY | O_CREAT, 0644);
 	if (IS_ERR(out)) {
 		printk(KERN_INFO "Unable to open '%s'.\n", filename);
 	}
-	fsize = out->f_path.dentry->d_inode->i_size;
 	pos = 0;
 	i = vfs_write(out, (char __user *)kbuf, 40, &pos);
 
