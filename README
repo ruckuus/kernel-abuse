@@ -1,0 +1,5 @@
+This is an approach to sup kernel with file from user space.
+
+insmod kernel-abuse.ko evil=/path/to/file.something
+
+
