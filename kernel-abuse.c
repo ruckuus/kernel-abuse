@@ -35,7 +35,6 @@
 char *evil;
 char *out;
 
-
 module_param(evil, charp, 0000);
 module_param(out, charp, 0000);
 MODULE_PARM_DESC(evil, "file you want to sup to kernel");
@@ -43,8 +42,8 @@ MODULE_PARM_DESC(out, "file you want to write");
 
 static int read_file(char *filename)
 {
-	struct file *filp; /* input file ptr*/
-	struct file *fd; /* output file ptr */
+	struct file *filp;	/* input file ptr */
+	struct file *fd;	/* output file ptr */
 	long fsize;
 	int i;
 	char *kbuf;
@@ -61,11 +60,11 @@ static int read_file(char *filename)
 	 * vmalloc = <size> 
 	 */
 	if (fsize <= 0 || fsize > MAXSIZ) {
-		printk(KERN_INFO "File size must be less than 512KB '%s'\n", filename);
+		printk(KERN_INFO "File size must be less than 512KB '%s'\n",
+		       filename);
 		filp_close(filp, current->files);
 		return 0;
 	}
-
 	kbuf = vmalloc(fsize);
 	if (kbuf == NULL) {
 		printk(KERN_INFO "Unable to allocate memory '%s'.\n", filename);
@@ -85,7 +84,7 @@ static int read_file(char *filename)
 
 		/* write in brutal way */
 		pos = 0;
-		fd = filp_open(out, O_WRONLY|O_CREAT, 0644);
+		fd = filp_open(out, O_WRONLY | O_CREAT, 0644);
 		vfs_write(fd, (char __user *)kbuf, fsize, &pos);
 		filp_close(fd, current->files);
 		vfree(kbuf);
@@ -108,19 +107,19 @@ static int __init init(void)
 		rv = read_file(evil);
 		set_fs(old_fs);
 	} else {
-		printk (KERN_INFO "Sup a file!\n");
+		printk(KERN_INFO "Sup a file!\n");
 	}
 
 	/* TODO: do proper brutal write 
-	if (out != NULL) {
-		printk("Write to file '%s'.\n", out);
-		set_fs(get_ds());
-		rw = file_write(out);
-		set_fs(old_fs);
-	} else {
-		printk(KERN_INFO "Write to where?");
-	}
-	*/
+	   if (out != NULL) {
+	   printk("Write to file '%s'.\n", out);
+	   set_fs(get_ds());
+	   rw = file_write(out);
+	   set_fs(old_fs);
+	   } else {
+	   printk(KERN_INFO "Write to where?");
+	   }
+	 */
 	return -EAGAIN;
 }
 
