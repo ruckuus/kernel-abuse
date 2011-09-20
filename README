@@ -1,5 +1,9 @@
 This is an approach to sup kernel with file from user space.
 
-insmod kernel-abuse.ko evil=/path/to/file.something
+insmod abuse.ko evil=/path/to/file.something out=/path/to/file
+
+This will act like copy-via-kernel.
+evil=input file
+out=output file
 
 

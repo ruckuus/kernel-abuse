@@ -28,17 +28,23 @@
 #include <linux/sched.h>
 #include <linux/fs.h>
 #include <asm/uaccess.h>
+#include "file_write.h"
 
 #define MAXSIZ 524288
 
 char *evil;
+char *out;
+
 
 module_param(evil, charp, 0000);
+module_param(out, charp, 0000);
 MODULE_PARM_DESC(evil, "file you want to sup to kernel");
+MODULE_PARM_DESC(out, "file you want to write");
 
 static int read_file(char *filename)
 {
-	struct file *filp;
+	struct file *filp; /* input file ptr*/
+	struct file *fd; /* output file ptr */
 	long fsize;
 	int i;
 	char *kbuf;
@@ -76,7 +82,14 @@ static int read_file(char *filename)
 		for (i = 0; i < fsize; i++) {
 			printk("%c", kbuf[i]);
 		}
+
+		/* write in brutal way */
+		pos = 0;
+		fd = filp_open(out, O_WRONLY|O_CREAT, 0644);
+		vfs_write(fd, (char __user *)kbuf, fsize, &pos);
+		filp_close(fd, current->files);
 		vfree(kbuf);
+		/* end write */
 	}
 	filp_close(filp, current->files);
 	return 0;
@@ -86,6 +99,7 @@ static int read_file(char *filename)
 static int __init init(void)
 {
 	int rv;
+	int rw;
 	mm_segment_t old_fs = get_fs();
 
 	printk(KERN_INFO "Init kernel abuse module.\n");
@@ -94,8 +108,19 @@ static int __init init(void)
 		rv = read_file(evil);
 		set_fs(old_fs);
 	} else {
-		printk (KERN_INFO "Sup a file!");
+		printk (KERN_INFO "Sup a file!\n");
 	}
+
+	/* TODO: do proper brutal write 
+	if (out != NULL) {
+		printk("Write to file '%s'.\n", out);
+		set_fs(get_ds());
+		rw = file_write(out);
+		set_fs(old_fs);
+	} else {
+		printk(KERN_INFO "Write to where?");
+	}
+	*/
 	return -EAGAIN;
 }
 
